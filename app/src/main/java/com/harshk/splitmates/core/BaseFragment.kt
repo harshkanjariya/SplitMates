@@ -19,10 +19,17 @@ abstract class BaseFragment<VB: ViewBinding>(val bindingFactory: (LayoutInflater
     ): View? {
         if (_binding == null) {
             _binding = bindingFactory(layoutInflater)
-            binding.setViewBindingVariables()
+            binding.setViewBindingOnCreateView()
         }
         return binding.root
     }
 
-    abstract fun VB.setViewBindingVariables()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.setViewBindingOnViewCreated()
+    }
+
+    abstract fun VB.setViewBindingOnCreateView()
+
+    abstract fun VB.setViewBindingOnViewCreated()
 }

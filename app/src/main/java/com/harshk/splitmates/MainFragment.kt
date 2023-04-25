@@ -1,21 +1,22 @@
 package com.harshk.splitmates
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import com.harshk.splitmates.core.BaseFragment
+import com.harshk.splitmates.databinding.FragmentMainBinding
+import com.harshk.splitmates.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+@AndroidEntryPoint
+class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
+    private val viewModel: MainViewModel by viewModels()
+    override fun FragmentMainBinding.setViewBindingOnViewCreated() {
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    override fun FragmentMainBinding.setViewBindingOnCreateView() {
+        val account = viewModel.googleAccount
+        if (account == null) {
+            viewModel.signIn(requireActivity())
+        }
     }
+
 }

@@ -2,6 +2,7 @@ package com.harshk.splitmates.viewmodel
 
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,38 +18,26 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val useCase: MainUseCase
 ) : ViewModel() {
-    var isLoaded = MutableLiveData(false)
     var googleAccount: GoogleSignInAccount? = null
-    var splitFiles: MutableLiveData<List<File>> = MutableLiveData(emptyList())
 
     init {
         viewModelScope.launch {
-            googleAccount = useCase.invoke()
-            isLoaded.value = true
+            googleAccount = useCase()
         }
     }
 
-    fun signIn(activity: AppCompatActivity) {
+    fun signIn(activity: FragmentActivity) {
         val activityLauncher = activity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+            if (it.resultCode == FragmentActivity.RESULT_OK) {
                 viewModelScope.launch {
-                    googleAccount = useCase.invoke()
-                    isLoaded.value = true
+                    googleAccount = useCase()
                 }
             }
         }
         val intent = useCase.getGoogleClient().signInIntent
-        isLoaded.value = false
         activityLauncher.launch(intent)
-    }
-
-    fun loadFile() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val list = useCase.loadFiles()
-            splitFiles.postValue(list)
-        }
     }
 
     fun createFile() {

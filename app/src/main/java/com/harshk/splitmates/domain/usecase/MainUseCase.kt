@@ -9,8 +9,8 @@ import javax.inject.Inject
 class MainUseCase @Inject constructor(
     private val dataSource: MainDataSource
 ) {
-    fun invoke(): GoogleSignInAccount? {
-        return dataSource.getUser()
+    operator fun invoke(): GoogleSignInAccount? {
+        return dataSource.getGoogleAccount()
     }
     fun getGoogleClient(): GoogleSignInClient {
         return dataSource.getGoogleClient()

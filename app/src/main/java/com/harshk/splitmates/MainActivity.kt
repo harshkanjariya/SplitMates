@@ -3,25 +3,15 @@ package com.harshk.splitmates
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.addCallback
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.navigation.NavigationView
-import com.harshk.splitmates.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by viewModels()
-
     lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
 
@@ -55,6 +45,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.main_fragment, MainFragment())
+            .commit()
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {

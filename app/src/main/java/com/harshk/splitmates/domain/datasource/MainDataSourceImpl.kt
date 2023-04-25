@@ -1,11 +1,11 @@
 package com.harshk.splitmates.domain.datasource
 
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.services.drive.model.File
 import com.harshk.splitmates.FileManager
 import com.harshk.splitmates.GoogleService
-import com.harshk.splitmates.domain.datasource.MainDataSource
 import javax.inject.Inject
 
 
@@ -13,7 +13,7 @@ class MainDataSourceImpl @Inject constructor(
     private val googleService: GoogleService,
     private val fileManager: FileManager,
 ) : MainDataSource {
-    override fun getUser(): GoogleSignInAccount? {
+    override fun getGoogleAccount(): GoogleSignInAccount? {
         return googleService.getUser()
     }
 
