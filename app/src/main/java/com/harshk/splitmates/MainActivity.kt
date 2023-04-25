@@ -8,9 +8,15 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.navigation.NavigationView
 import com.harshk.splitmates.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -35,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.navigation_view)
 
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
+        actionBarDrawerToggle =
+            ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -54,25 +61,21 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager
                         .beginTransaction()
                         .add(R.id.main_fragment, MainFragment())
+                        .commit()
+                    drawerLayout.closeDrawers()
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.settings -> {
                     supportFragmentManager
                         .beginTransaction()
                         .add(R.id.main_fragment, SettingsFragment())
+                        .commit()
+                    drawerLayout.closeDrawers()
                     return@setNavigationItemSelectedListener true
                 }
                 else -> {
                     return@setNavigationItemSelectedListener false
                 }
-            }
-        }
-
-        viewModel.isLoaded.observe(this) {
-            if (viewModel.googleAccount == null) {
-                viewModel.signIn(this)
-            } else {
-                viewModel.loadFile()
             }
         }
     }

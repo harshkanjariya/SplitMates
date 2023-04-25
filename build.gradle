@@ -1,4 +1,15 @@
 buildscript {
+    ext {
+        androidXHiltWork = "1.0.0"
+        androidXWorkKtx = "2.8.1"
+
+        hilt_version = '2.44'
+        hilt_compiler_version = "1.0.0"
+
+        jetbrainsCoroutines = "1.6.4"
+
+        ktor_version = '1.6.4'
+    }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.15'
     }
