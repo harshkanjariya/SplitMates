@@ -4,7 +4,8 @@ import android.app.Application
 import android.content.Context
 import com.harshk.splitmates.FileManager
 import com.harshk.splitmates.GoogleService
-import dagger.Binds
+import com.harshk.splitmates.domain.datasource.MainDataSource
+import com.harshk.splitmates.domain.datasource.MainDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

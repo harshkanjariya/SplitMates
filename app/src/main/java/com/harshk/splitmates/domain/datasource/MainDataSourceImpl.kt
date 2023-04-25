@@ -1,13 +1,11 @@
-package com.harshk.splitmates.domain
+package com.harshk.splitmates.domain.datasource
 
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.harshk.splitmates.FileManager
 import com.harshk.splitmates.GoogleService
+import com.harshk.splitmates.domain.datasource.MainDataSource
 import javax.inject.Inject
 
 
