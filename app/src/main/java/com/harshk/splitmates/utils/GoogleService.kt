@@ -1,4 +1,4 @@
-package com.harshk.splitmates
+package com.harshk.splitmates.utils
 
 import android.content.Context
 import android.util.Log

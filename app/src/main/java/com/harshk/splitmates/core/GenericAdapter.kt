@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.ListAdapter
 
 class GenericAdapter<T> (
     private val viewLayout: Int,
-    private val onHold: (item: T) -> Unit,
+    private val onClick: (item: T, position: Int) -> Unit,
+    private val onHold: (item: T, position: Int) -> Unit,
     areItemsSame: (oldItem: T, newItem: T) -> Boolean,
     areItemContentsEqual: (oldItem: T, newItem: T) -> Boolean = { old, new -> old == new },
 ): ListAdapter<T, DataBindingViewHolder<T>>(DiffCallback(areItemsSame, areItemContentsEqual)) {
@@ -27,7 +28,7 @@ class GenericAdapter<T> (
     }
 
     override fun onBindViewHolder(holder: DataBindingViewHolder<T>, position: Int) {
-        holder.bind(getItem(position), onHold)
+        holder.bind(getItem(position), onClick, onHold, position)
     }
 
     class DiffCallback<T>(

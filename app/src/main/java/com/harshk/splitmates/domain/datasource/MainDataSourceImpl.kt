@@ -1,11 +1,11 @@
 package com.harshk.splitmates.domain.datasource
 
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.services.drive.model.File
-import com.harshk.splitmates.FileManager
-import com.harshk.splitmates.GoogleService
+import com.harshk.splitmates.utils.FileManager
+import com.harshk.splitmates.utils.GoogleService
+import com.harshk.splitmates.domain.model.SettingListItem
 import javax.inject.Inject
 
 
@@ -25,6 +25,13 @@ class MainDataSourceImpl @Inject constructor(
         googleService.createFile(
             fileManager.file
         )
+    }
+
+    override fun deleteFiles(files: List<SettingListItem>) {
+        val drive = googleService.getDrive()
+        for (file in files) {
+            drive?.Files()?.delete(file.id)?.execute()
+        }
     }
 
     override fun loadFiles(): List<File> {

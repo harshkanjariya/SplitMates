@@ -18,4 +18,8 @@ class SettingsUseCase @Inject constructor(
             )
         }
     }
+
+    fun deleteFiles(files: List<SettingListItem>) {
+        dataSource.deleteFiles(files)
+    }
 }
