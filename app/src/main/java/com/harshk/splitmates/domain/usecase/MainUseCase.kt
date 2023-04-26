@@ -20,7 +20,7 @@ class MainUseCase @Inject constructor(
         return dataSource.loadFiles()
     }
 
-    fun createFile() {
-        return dataSource.createFile()
+    fun createFile(name: String) {
+        return dataSource.createFile(name)
     }
 }

@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.harshk.splitmates.ui.compose.main.MainFragmentComposable
-import com.harshk.splitmates.viewmodel.MainViewModel
+import com.harshk.splitmates.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +22,7 @@ class MainFragment: Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                MainFragmentComposable()
+                MainFragmentComposable(viewModel)
             }
         }
     }

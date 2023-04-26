@@ -1,4 +1,4 @@
-package com.harshk.splitmates.viewmodel
+package com.harshk.splitmates.ui.viewmodel
 
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -8,22 +8,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.api.services.drive.model.File
+import com.harshk.splitmates.core.mvi.MVIBaseViewModel
 import com.harshk.splitmates.domain.usecase.MainUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val useCase: MainUseCase
-) : ViewModel() {
+) : MVIBaseViewModel<MainContract.State, MainContract.Event, MainContract.Effect>() {
     var googleAccount: GoogleSignInAccount? = null
 
     init {
-        viewModelScope.launch {
-            googleAccount = useCase()
-        }
+        setEvent(MainContract.Event.LoadAccount)
     }
 
     fun signIn(activity: FragmentActivity) {
@@ -40,9 +40,28 @@ class MainViewModel @Inject constructor(
         activityLauncher.launch(intent)
     }
 
-    fun createFile() {
+    private fun createFile(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            useCase.createFile()
+            useCase.createFile(name)
+        }
+    }
+
+    private fun loadAccount() {
+        viewModelScope.launch {
+            googleAccount = useCase()
+        }
+    }
+
+    override fun createInitialState(): MainContract.State {
+        return MainContract.State()
+    }
+
+    override fun handleEvent(event: MainContract.Event) {
+        when (event) {
+            MainContract.Event.LoadAccount -> loadAccount()
+            is MainContract.Event.OnCreateFile -> createFile(event.name)
+            MainContract.Event.OnAddDialogShow -> currentState.isAddDialogShowing.value = true
+            MainContract.Event.OnAddDialogHide -> currentState.isAddDialogShowing.value = false
         }
     }
 }

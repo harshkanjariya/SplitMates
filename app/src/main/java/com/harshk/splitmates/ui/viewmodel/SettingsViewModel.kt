@@ -1,4 +1,4 @@
-package com.harshk.splitmates.viewmodel
+package com.harshk.splitmates.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

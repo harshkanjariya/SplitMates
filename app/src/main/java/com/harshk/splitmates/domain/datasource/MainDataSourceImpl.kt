@@ -21,10 +21,8 @@ class MainDataSourceImpl @Inject constructor(
         return googleService.getGoogleSignInClient()
     }
 
-    override fun createFile() {
-        googleService.createFile(
-            fileManager.file
-        )
+    override fun createFile(name: String) {
+        googleService.createFile(fileManager.getFile(name))
     }
 
     override fun deleteFiles(files: List<SettingListItem>) {

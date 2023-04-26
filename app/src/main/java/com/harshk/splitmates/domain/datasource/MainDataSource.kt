@@ -10,6 +10,6 @@ interface MainDataSource {
     fun getGoogleAccount(): GoogleSignInAccount?
     fun getGoogleClient(): GoogleSignInClient
     fun loadFiles(): List<File>
-    fun createFile()
+    fun createFile(name: String)
     fun deleteFiles(files: List<SettingListItem>)
 }

@@ -17,7 +17,7 @@ import com.harshk.splitmates.core.BaseFragment
 import com.harshk.splitmates.core.GenericAdapter
 import com.harshk.splitmates.databinding.FragmentSettingsBinding
 import com.harshk.splitmates.domain.model.SettingListItem
-import com.harshk.splitmates.viewmodel.SettingsViewModel
+import com.harshk.splitmates.ui.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
