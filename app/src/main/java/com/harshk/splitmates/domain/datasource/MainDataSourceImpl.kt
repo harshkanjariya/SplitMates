@@ -5,7 +5,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.services.drive.model.File
 import com.harshk.splitmates.utils.FileManager
 import com.harshk.splitmates.utils.GoogleService
-import com.harshk.splitmates.domain.model.SettingListItem
+import com.harshk.splitmates.domain.model.Group
 import javax.inject.Inject
 
 
@@ -21,24 +21,23 @@ class MainDataSourceImpl @Inject constructor(
         return googleService.getGoogleSignInClient()
     }
 
-    override fun createFile(name: String) {
-        googleService.createFile(fileManager.getFile(name))
+    override fun createFile(name: String): File? {
+        return googleService.createFile(fileManager.getFile(name))
     }
 
-    override fun deleteFiles(files: List<SettingListItem>) {
+    override fun deleteFiles(files: List<Group>) {
         val drive = googleService.getDrive()
         for (file in files) {
             drive?.Files()?.delete(file.id)?.execute()
         }
     }
 
-    override fun loadFiles(): List<File> {
-        val drive = googleService.getDrive() ?: return emptyList()
-        val list = drive.Files().list().execute()
-        val files = ArrayList<File>()
-        for (file in list.files) {
-            files.add(file)
+    override fun loadFiles(): List<Group> {
+        return googleService.listFiles().map {
+            Group(
+                id = it.id,
+                name = it.name,
+            )
         }
-        return files
     }
 }

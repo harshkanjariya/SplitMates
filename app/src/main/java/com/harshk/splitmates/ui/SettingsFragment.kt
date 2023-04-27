@@ -16,7 +16,7 @@ import com.harshk.splitmates.R
 import com.harshk.splitmates.core.BaseFragment
 import com.harshk.splitmates.core.GenericAdapter
 import com.harshk.splitmates.databinding.FragmentSettingsBinding
-import com.harshk.splitmates.domain.model.SettingListItem
+import com.harshk.splitmates.domain.model.Group
 import com.harshk.splitmates.ui.viewmodel.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -66,8 +66,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         settingsAccountList.addItemDecoration(itemDecoration)
     }
 
-    private fun getAdapter(): GenericAdapter<SettingListItem> {
-        val updateItem: (item: SettingListItem, position: Int) -> Unit = { item, position ->
+    private fun getAdapter(): GenericAdapter<Group> {
+        val updateItem: (item: Group, position: Int) -> Unit = { item, position ->
             item.selected = !item.selected
             viewModel.toggleItemSelection(item)
             adapter.notifyItemChanged(position)

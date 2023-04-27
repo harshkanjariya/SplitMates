@@ -31,8 +31,10 @@ fun AddFileDialog(
             value = text.value,
             modifier = Modifier.fillMaxWidth(),
             onValueChange = {
-                text.value = it
-            }
+                text.value = it.trim().replace(Regex("\\s+") ," ")
+            },
+            maxLines = 1,
+            singleLine = true,
         )
     }
 }

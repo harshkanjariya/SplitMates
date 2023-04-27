@@ -19,17 +19,27 @@ class GoogleService(private val context: Context) {
     fun getUser(): GoogleSignInAccount? {
         return GoogleSignIn.getLastSignedInAccount(context)
     }
-    fun createFile(file: File) {
-        try {
-            val gfile = com.google.api.services.drive.model.File()
-            gfile.name = file.name
-            Log.e("createFile > 26", "$gfile")
+
+    fun listFiles(): List<com.google.api.services.drive.model.File> {
+        val drive = getDrive() ?: return emptyList()
+        val list = drive.Files().list().execute()
+        val files = ArrayList<com.google.api.services.drive.model.File>()
+        for (file in list.files) {
+            files.add(file)
+        }
+        return files
+    }
+    fun createFile(file: File): com.google.api.services.drive.model.File? {
+        return try {
+            val googleFile = com.google.api.services.drive.model.File()
+            googleFile.name = file.name
             val fileContent = FileContent("text/plain", file)
             val drive = getDrive()
-            val task = drive?.Files()?.create(gfile, fileContent)?.execute()
-            Log.e("createFile > 30", "$task")
+            val task = drive?.Files()?.create(googleFile, fileContent)?.execute()
+            task
         } catch (e: java.lang.Exception) {
             Log.e("createFile > 29", "$e")
+            null
         }
     }
 

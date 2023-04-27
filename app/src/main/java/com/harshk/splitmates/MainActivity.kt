@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.home -> {
                     supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.main_fragment, MainFragment())
+                        .replace(R.id.main_fragment, MainFragment())
                         .commit()
                     drawerLayout.closeDrawers()
                     return@setNavigationItemSelectedListener true
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.settings -> {
                     supportFragmentManager
                         .beginTransaction()
-                        .add(R.id.main_fragment, SettingsFragment())
+                        .replace(R.id.main_fragment, SettingsFragment())
                         .commit()
                     drawerLayout.closeDrawers()
                     return@setNavigationItemSelectedListener true
