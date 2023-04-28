@@ -8,11 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.navigation.NavigationView
 import com.harshk.splitmates.ui.MainFragment
 import com.harshk.splitmates.ui.SettingsFragment
 import com.harshk.splitmates.utils.GoogleService
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -49,6 +52,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            val googleService = GoogleService(this@MainActivity)
+            googleService.initializeFolders()
+        }
+
         supportFragmentManager
             .beginTransaction()
             .add(R.id.main_fragment, MainFragment())
@@ -66,6 +74,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.logout -> {
                     val googleService = GoogleService(this@MainActivity)
                     googleService.signOut()
+                    drawerLayout.closeDrawers()
+                    replaceFragment(MainFragment())
                     return@setNavigationItemSelectedListener true
                 }
                 else -> {

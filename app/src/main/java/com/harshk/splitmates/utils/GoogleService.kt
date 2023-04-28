@@ -18,9 +18,32 @@ import com.google.api.services.drive.model.Permission
 import java.io.File
 import java.io.IOException
 import java.util.*
-
+import kotlin.collections.ArrayList
 
 class GoogleService(private val context: Context) {
+    fun initializeFolders(): List<String>? {
+        val folders = DRIVE_BASE_PATH.split("/")
+        val drive = getDrive() ?: return null
+
+        val query =
+            "mimeType='application/vnd.google-apps.folder' and name='$DRIVE_BASE_PATH' and trashed=false"
+        val files = drive.Files().list().setQ(query).setFields("files(id)").execute()
+        if (files.files.isNotEmpty()) {
+            return files.files.map { it.id }
+        }
+
+        val ids = ArrayList<String>()
+        for (folder in folders) {
+            val file = com.google.api.services.drive.model.File().apply {
+                name = folder
+                mimeType = "application/vnd.google-apps.folder"
+            }
+            val createdFolder = drive.Files().create(file).execute()
+            ids.add(createdFolder.id)
+        }
+        return ids
+    }
+
     fun getAccount(): GoogleSignInAccount? {
         return GoogleSignIn.getLastSignedInAccount(context)
     }
@@ -28,6 +51,27 @@ class GoogleService(private val context: Context) {
     fun signOut() {
         val client = getGoogleSignInClient()
         client.signOut()
+    }
+
+    fun listFilesInFolder(folderId: String): List<com.google.api.services.drive.model.File> {
+        val drive = getDrive() ?: return emptyList()
+        val query = "'$folderId' in parents and trashed = false"
+        val files = mutableListOf<com.google.api.services.drive.model.File>()
+        var nextPageToken: String? = null
+        do {
+            try {
+                val request = drive.files().list()
+                    .setQ(query)
+                    .setFields("nextPageToken, files(id, name, createdTime, modifiedTime)")
+                    .setPageToken(nextPageToken)
+                val response = request.execute()
+                files.addAll(response.files)
+                nextPageToken = response.nextPageToken
+            } catch (e: java.lang.Exception) {
+                Log.e("listFilesInFolder > 47", "$e")
+            }
+        } while (nextPageToken != null)
+        return files
     }
 
     fun listFiles(): List<com.google.api.services.drive.model.File> {
@@ -39,10 +83,12 @@ class GoogleService(private val context: Context) {
         }
         return files
     }
+
     fun createFile(file: File): com.google.api.services.drive.model.File? {
         return try {
             val googleFile = com.google.api.services.drive.model.File()
             googleFile.name = file.name
+            googleFile.parents = initializeFolders()
             val fileContent = FileContent("text/plain", file)
             val drive = getDrive()
             val files = drive?.Files()
@@ -102,5 +148,19 @@ class GoogleService(private val context: Context) {
             .build()
 
         return GoogleSignIn.getClient(context, signInOptions)
+    }
+
+    fun listPermissions(fileId: String): ArrayList<Permission>? {
+        val drive = getDrive()
+        val permissions = drive?.Permissions()?.list(fileId)?.execute() ?: return null
+        val list = ArrayList<Permission>()
+        for (p in permissions.permissions) {
+            val perm = drive.Permissions().get(fileId, p.id).execute()
+            perm?.let {
+                list.add(perm)
+            }
+        }
+        Log.e("listPermissions > 115", "$list")
+        return list
     }
 }
