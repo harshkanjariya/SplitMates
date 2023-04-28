@@ -14,7 +14,7 @@ class MainDataSourceImpl @Inject constructor(
     private val fileManager: FileManager,
 ) : MainDataSource {
     override fun getGoogleAccount(): GoogleSignInAccount? {
-        return googleService.getUser()
+        return googleService.getAccount()
     }
 
     override fun getGoogleClient(): GoogleSignInClient {

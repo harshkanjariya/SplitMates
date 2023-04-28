@@ -33,7 +33,10 @@ fun MainSplitList(groups: MutableStateFlow<List<Group>>, onItemClick: (group: Gr
 
 @Composable
 fun MainSplitItem(data: Group, onClick: () -> Unit) {
-    Column(Modifier.padding(5.dp).clickable { onClick() }) {
+    Column(
+        Modifier
+            .padding(5.dp)
+            .clickable { onClick() }) {
         Text(text = data.id)
         Text(text = data.name)
     }

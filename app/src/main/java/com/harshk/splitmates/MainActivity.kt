@@ -7,9 +7,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.harshk.splitmates.ui.MainFragment
 import com.harshk.splitmates.ui.SettingsFragment
+import com.harshk.splitmates.utils.GoogleService
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,19 +56,16 @@ class MainActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
-                    supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.main_fragment, MainFragment())
-                        .commit()
-                    drawerLayout.closeDrawers()
+                    replaceFragment(MainFragment())
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.settings -> {
-                    supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.main_fragment, SettingsFragment())
-                        .commit()
-                    drawerLayout.closeDrawers()
+                    replaceFragment(SettingsFragment())
+                    return@setNavigationItemSelectedListener true
+                }
+                R.id.logout -> {
+                    val googleService = GoogleService(this@MainActivity)
+                    googleService.signOut()
                     return@setNavigationItemSelectedListener true
                 }
                 else -> {
@@ -74,5 +73,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.main_fragment, fragment)
+            .commit()
+        drawerLayout.closeDrawers()
     }
 }
